@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Value 141 Partner Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#C9A227;--gold2:#e2bd4a;--black:#0D0D0D;--ink:#1a1a1a;--bg:#f5f3ee;--card:#fff;--line:#e6e1d4;--mut:#6b675c;--red:#b3261e;--green:#1f7a3d}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:'IBM Plex Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink)}
+h1,h2,h3{font-family:'Fraunces',serif;margin:0}
+button,input,select,textarea{font:inherit}
+.hide{display:none!important}
+.screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--black)}
+.box{background:#161616;border:1px solid #2c2a22;border-radius:14px;padding:30px;width:100%;max-width:400px;color:#eee}
+.box h1{color:var(--gold);font-size:26px;margin-bottom:4px}
+.box p.sub{color:#a9a595;margin:0 0 18px;font-size:14px}
+.box label{display:block;font-size:12px;color:#a9a595;margin:12px 0 4px;text-transform:uppercase;letter-spacing:.05em}
+.box input{width:100%;padding:11px 12px;border-radius:8px;border:1px solid #3a372c;background:#0d0d0d;color:#fff}
+.box input:focus{outline:2px solid var(--gold);border-color:var(--gold)}
+.btn{background:var(--gold);color:#111;border:0;border-radius:8px;padding:11px 16px;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--gold2)}
+.btn:disabled{opacity:.5;cursor:wait}
+.btn.full{width:100%;margin-top:18px}
+.btn.ghost{background:transparent;color:var(--gold);border:1px solid var(--gold)}
+.btn.sm{padding:6px 10px;font-size:13px}
+.btn.red{background:var(--red);color:#fff}
+.link{background:none;border:0;color:var(--gold);cursor:pointer;padding:0;text-decoration:underline;font-size:13px}
+.msg{margin-top:12px;font-size:13px;padding:9px 11px;border-radius:8px}
+.msg.err{background:#3a1512;color:#ffb4ab}
+.msg.ok{background:#12301c;color:#9be2b0}
+.row-links{display:flex;justify-content:space-between;margin-top:14px}
+.langbar{position:fixed;top:12px;right:14px;z-index:20}
+.langbar button{background:#222;color:var(--gold);border:1px solid #3a372c;border-radius:6px;padding:5px 9px;cursor:pointer;font-size:12px}
+/* app shell */
+#app{display:flex;min-height:100vh}
+.side{width:230px;background:var(--black);color:#ddd;padding:20px 14px;display:flex;flex-direction:column;flex-shrink:0}
+.side .logo{font-family:'Fraunces',serif;color:var(--gold);font-size:22px;margin:0 8px 22px}
+.side a{display:block;padding:10px 12px;border-radius:8px;color:#ccc;cursor:pointer;margin-bottom:2px;font-size:14px}
+.side a.on,.side a:hover{background:#1f1d16;color:var(--gold)}
+.side .grow{flex:1}
+.side .me{font-size:12px;color:#8d8977;padding:8px 10px;word-break:break-all}
+.main{flex:1;min-width:0;padding:28px 30px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.top h2{font-size:26px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:14px}
+.card h3{font-size:18px;margin-bottom:6px}
+.tag{display:inline-block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;padding:2px 8px;border-radius:99px;background:#f1e7bf;color:#6b5400;margin-bottom:8px;font-weight:600}
+.mut{color:var(--mut);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.f input,.f select,.f textarea{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;margin-bottom:10px}
+.f label{font-size:12px;color:var(--mut);display:block;margin-bottom:3px}
+.rowx{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pill{font-size:11px;padding:2px 8px;border-radius:99px;font-weight:600}
+.pill.approved{background:#dcf3e3;color:var(--green)}.pill.pending{background:#fff0c2;color:#7a5b00}.pill.blocked{background:#fbdcd9;color:var(--red)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;cursor:pointer}
+.tile b{display:block;font-family:'Fraunces',serif;font-size:30px;color:var(--ink)}
+.tile span{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.05em}
+.tile.warn b{color:var(--red)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.chip{border:1px solid var(--line);background:#fff;border-radius:99px;padding:5px 12px;font-size:13px;cursor:pointer}
+.chip.on{background:var(--black);color:var(--gold);border-color:var(--black)}
+.lead{cursor:pointer;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
+.lead:hover{border-color:var(--gold)}
+.lead>div:first-child{min-width:0;flex:1 1 200px}
+.lead .nm,.lead .mut{overflow-wrap:anywhere;word-break:break-word}
+.lead .nm{font-weight:600;font-size:16px}
+.modal{min-width:0}
+.modal input,.modal select,.modal textarea{min-width:0;max-width:100%}
+.two>div{min-width:0}
+.lead .acts a{display:inline-block;border:1px solid var(--line);border-radius:8px;padding:5px 10px;font-size:13px;color:var(--ink);text-decoration:none;margin-left:4px}
+.lead .acts a:hover{border-color:var(--gold)}
+.pill.new{background:#e1ecff;color:#1d4fa3}.pill.contacted{background:#fff0c2;color:#7a5b00}.pill.appointment{background:#ece0ff;color:#5b2aa3}.pill.quoted{background:#ffe3cf;color:#9a4a0b}.pill.won{background:#dcf3e3;color:var(--green)}.pill.lost{background:#eee;color:#666}
+.late{color:var(--red);font-weight:600}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:50;display:flex;align-items:flex-start;justify-content:center;padding:20px;overflow:auto}
+.modal{background:#fff;border-radius:14px;padding:20px;width:100%;max-width:560px;margin:auto}
+.modal h3{margin-bottom:12px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+.note{border-left:3px solid var(--gold);padding:4px 10px;margin:8px 0;font-size:14px;white-space:pre-wrap}
+.mobtop{display:none}
+@media(max-width:760px){
+ .two{grid-template-columns:1fr}
+ #app{flex-direction:column}
+ .side{width:100%;flex-direction:row;flex-wrap:wrap;align-items:center;padding:10px;gap:4px}
+ .side .logo{margin:0 10px 0 4px;font-size:18px}
+ .side .grow,.side .me{display:none}
+ .side a{padding:7px 10px;margin:0}
+ .main{padding:18px 14px}
+ .langbar{top:auto;bottom:12px}
+}
+</style>
+</head>
+<body>
+<div class="langbar"><button id="langBtn" type="button">ES</button></div>
+
+<!-- CONFIG MISSING -->
+<div class="screen hide" id="sCfg" style="align-items:flex-start"><div class="box" style="max-width:720px;margin:20px auto">
+ <h1>Configuración / Setup</h1>
+ <p class="sub">Este portal aún no está conectado. Sigue estos pasos (solo una vez):</p>
+ <ol style="line-height:1.7;padding-left:20px;font-size:14px">
+  <li>En <b>supabase.com</b> crea un proyecto (gratis).</li>
+  <li>Menú <b>SQL Editor → New query</b>: pega el código de abajo → <b>Run</b>.</li>
+  <li><b>Project Settings → API</b>: copia <i>Project URL</i> y la llave <i>anon public</i> (NUNCA la service_role).</li>
+  <li>Abre este mismo archivo en un editor de texto, busca <code>PEGA AQUI TUS DATOS</code> y reemplaza <code>SUPABASE_URL</code> y <code>SUPABASE_ANON_KEY</code>.</li>
+  <li>Supabase → <b>Authentication → URL Configuration</b>: en Site URL pon la dirección final del portal.</li>
+  <li>Sube este archivo a Vercel (renómbralo <code>index.html</code>).</li>
+  <li>Crea tu cuenta en el portal y corre en SQL Editor: <code>update public.profiles set role='admin', status='approved' where email='TU-CORREO';</code> — luego cierra sesión y entra otra vez.</li>
+ </ol>
+ <label>SQL (paso 2)</label>
+ <textarea id="sqlBox" readonly rows="10" style="width:100%;background:#0d0d0d;color:#ddd;border:1px solid #3a372c;border-radius:8px;padding:10px;font-family:monospace;font-size:12px">-- =====================================================================
+-- VALUE 141 PARTNER PORTAL — Paso 1: cuentas, roles, empresas, noticias
+-- Pega TODO esto en Supabase &gt; SQL Editor &gt; New query &gt; Run
+-- =====================================================================
+
+create extension if not exists pgcrypto;
+
+-- ---------- TABLAS ----------
+create table if not exists public.companies (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  created_at timestamptz not null default now()
+);
+
+create table if not exists public.profiles (
+  id uuid primary key references auth.users(id) on delete cascade,
+  email text,
+  full_name text,
+  company_name_requested text,
+  role text not null default &#x27;company&#x27; check (role in (&#x27;admin&#x27;,&#x27;company&#x27;)),
+  status text not null default &#x27;pending&#x27; check (status in (&#x27;pending&#x27;,&#x27;approved&#x27;,&#x27;blocked&#x27;)),
+  company_id uuid references public.companies(id) on delete set null,
+  created_at timestamptz not null default now()
+);
+
+create table if not exists public.news (
+  id uuid primary key default gen_random_uuid(),
+  tag text not null default &#x27;news&#x27; check (tag in (&#x27;update&#x27;,&#x27;news&#x27;,&#x27;event&#x27;,&#x27;tip&#x27;)),
+  title text not null,
+  body text not null default &#x27;&#x27;,
+  title_es text,
+  body_es text,
+  created_by uuid references public.profiles(id) on delete set null,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists profiles_status_idx on public.profiles(status);
+create index if not exists profiles_company_idx on public.profiles(company_id);
+create index if not exists news_created_idx on public.news(created_at desc);
+
+-- ---------- FUNCIONES DE AYUDA (security definer evita recursion en RLS) ----------
+create or replace function public.is_admin()
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1 from public.profiles
+    where id = auth.uid() and role = &#x27;admin&#x27; and status = &#x27;approved&#x27;
+  );
+$$;
+
+create or replace function public.is_approved()
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1 from public.profiles
+    where id = auth.uid() and status = &#x27;approved&#x27;
+  );
+$$;
+
+create or replace function public.my_company_id()
+returns uuid
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select company_id from public.profiles
+  where id = auth.uid() and status = &#x27;approved&#x27;;
+$$;
+
+-- ---------- CREAR PERFIL AUTOMATICO AL REGISTRARSE ----------
+create or replace function public.handle_new_user()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  insert into public.profiles (id, email, full_name, company_name_requested)
+  values (
+    new.id,
+    new.email,
+    left(coalesce(new.raw_user_meta_data-&gt;&gt;&#x27;full_name&#x27;, &#x27;&#x27;), 120),
+    left(coalesce(new.raw_user_meta_data-&gt;&gt;&#x27;company_name&#x27;, &#x27;&#x27;), 160)
+  )
+  on conflict (id) do nothing;
+  return new;
+end;
+$$;
+
+drop trigger if exists on_auth_user_created on auth.users;
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute function public.handle_new_user();
+
+-- ---------- SEGURIDAD (RLS) ----------
+alter table public.profiles  enable row level security;
+alter table public.companies enable row level security;
+alter table public.news      enable row level security;
+
+-- profiles: cada quien ve el suyo; admin ve todos; SOLO admin modifica.
+drop policy if exists profiles_select on public.profiles;
+create policy profiles_select on public.profiles
+  for select using (id = auth.uid() or public.is_admin());
+
+drop policy if exists profiles_update_admin on public.profiles;
+create policy profiles_update_admin on public.profiles
+  for update using (public.is_admin()) with check (public.is_admin());
+
+-- companies: admin todo; miembro aprobado ve solo la suya.
+drop policy if exists companies_select on public.companies;
+create policy companies_select on public.companies
+  for select using (public.is_admin() or id = public.my_company_id());
+
+drop policy if exists companies_insert on public.companies;
+create policy companies_insert on public.companies
+  for insert with check (public.is_admin());
+
+drop policy if exists companies_update on public.companies;
+create policy companies_update on public.companies
+  for update using (public.is_admin()) with check (public.is_admin());
+
+drop policy if exists companies_delete on public.companies;
+create policy companies_delete on public.companies
+  for delete using (public.is_admin());
+
+-- news: miembros aprobados leen; solo admin escribe.
+drop policy if exists news_select on public.news;
+create policy news_select on public.news
+  for select using (public.is_approved());
+
+drop policy if exists news_insert on public.news;
+create policy news_insert on public.news
+  for insert with check (public.is_admin());
+
+drop policy if exists news_update on public.news;
+create policy news_update on public.news
+  for update using (public.is_admin()) with check (public.is_admin());
+
+drop policy if exists news_delete on public.news;
+create policy news_delete on public.news
+  for delete using (public.is_admin());
+
+-- =====================================================================
+-- PASO 2: LEADS, CLIENTES, NOTAS Y SEGUIMIENTOS (cada empresa ve SOLO lo suyo)
+-- =====================================================================
+create table if not exists public.leads (
+  id uuid primary key default gen_random_uuid(),
+  company_id uuid not null references public.companies(id) on delete cascade,
+  name text not null,
+  phone text,
+  email text,
+  source text not null default &#x27;other&#x27; check (source in (&#x27;facebook&#x27;,&#x27;instagram&#x27;,&#x27;website&#x27;,&#x27;referral&#x27;,&#x27;call&#x27;,&#x27;other&#x27;)),
+  status text not null default &#x27;new&#x27; check (status in (&#x27;new&#x27;,&#x27;contacted&#x27;,&#x27;appointment&#x27;,&#x27;quoted&#x27;,&#x27;won&#x27;,&#x27;lost&#x27;)),
+  project_type text,
+  value numeric(12,2),
+  next_followup date,
+  appt_at timestamptz,
+  created_by uuid references public.profiles(id) on delete set null,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+create table if not exists public.lead_notes (
+  id uuid primary key default gen_random_uuid(),
+  lead_id uuid not null references public.leads(id) on delete cascade,
+  company_id uuid not null references public.companies(id) on delete cascade,
+  body text not null,
+  author_name text,
+  created_by uuid references public.profiles(id) on delete set null,
+  created_at timestamptz not null default now()
+);
+create index if not exists leads_company_idx on public.leads(company_id, status);
+create index if not exists leads_followup_idx on public.leads(company_id, next_followup);
+create index if not exists lead_notes_lead_idx on public.lead_notes(lead_id, created_at desc);
+
+alter table public.leads      enable row level security;
+alter table public.lead_notes enable row level security;
+
+drop policy if exists leads_all on public.leads;
+create policy leads_all on public.leads for all
+  using (public.is_admin() or company_id = public.my_company_id())
+  with check (public.is_admin() or company_id = public.my_company_id());
+
+drop policy if exists lead_notes_all on public.lead_notes;
+create policy lead_notes_all on public.lead_notes for all
+  using (public.is_admin() or company_id = public.my_company_id())
+  with check (public.is_admin() or company_id = public.my_company_id());
+
+-- =====================================================================
+-- DESPUES de crear TU cuenta en el portal, corre esta linea UNA vez
+-- (cambia el correo por el tuyo) para volverte administrador:
+--
+--   update public.profiles set role=&#x27;admin&#x27;, status=&#x27;approved&#x27;
+--   where email=&#x27;tu-correo@ejemplo.com&#x27;;
+-- =====================================================================
+</textarea>
+ <button class="btn full" id="copySql" type="button">Copiar SQL / Copy SQL</button>
+</div></div>
+
+<!-- AUTH -->
+<div class="screen hide" id="sAuth"><div class="box">
+ <h1>Value 141</h1>
+ <p class="sub" data-i="tagline"></p>
+ <form id="fAuth" novalidate>
+  <div id="signupOnly" class="hide">
+   <label data-i="fullName"></label><input id="aName" autocomplete="name">
+   <label data-i="companyName"></label><input id="aCompany" autocomplete="organization">
+  </div>
+  <label data-i="email"></label><input id="aEmail" type="email" autocomplete="email">
+  <label data-i="password"></label><input id="aPass" type="password" autocomplete="current-password">
+  <button class="btn full" id="aBtn" type="submit"></button>
+  <div id="aMsg" class="msg hide"></div>
+ </form>
+ <div class="row-links">
+  <button class="link" id="aToggle" type="button"></button>
+  <button class="link" id="aForgot" type="button" data-i="forgot"></button>
+ </div>
+</div></div>
+
+<!-- PENDING -->
+<div class="screen hide" id="sPending"><div class="box">
+ <h1 data-i="pendTitle"></h1>
+ <p class="sub" data-i="pendMsg"></p>
+ <button class="btn ghost full" data-act="logout" data-i="logout"></button>
+</div></div>
+
+<!-- BLOCKED -->
+<div class="screen hide" id="sBlocked"><div class="box">
+ <h1 data-i="blkTitle"></h1>
+ <p class="sub" data-i="blkMsg"></p>
+ <button class="btn ghost full" data-act="logout" data-i="logout"></button>
+</div></div>
+
+<!-- RECOVERY -->
+<div class="screen hide" id="sRecovery"><div class="box">
+ <h1 data-i="newPassTitle"></h1>
+ <form id="fRec" novalidate>
+  <label data-i="newPass"></label><input id="rPass" type="password" autocomplete="new-password">
+  <button class="btn full" type="submit" data-i="savePass"></button>
+  <div id="rMsg" class="msg hide"></div>
+ </form>
+</div></div>
+
+<!-- APP -->
+<div id="app" class="hide">
+ <nav class="side">
+  <div class="logo">Value 141</div>
+  <a data-view="home" data-i="navHome"></a>
+  <a data-view="leads" data-i="navLeads"></a>
+  <a data-view="customers" data-i="navCustomers"></a>
+  <a data-view="followups" data-i="navFollow"></a>
+  <a data-view="approvals" class="adm" data-i="navApprovals"></a>
+  <a data-view="companies" class="adm" data-i="navCompanies"></a>
+  <a data-view="news" class="adm" data-i="navNews"></a>
+  <div class="grow"></div>
+  <div class="me" id="meBox"></div>
+  <a data-act="logout" data-i="logout"></a>
+ </nav>
+ <main class="main" id="view"></main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+/* ====== PEGA AQUI TUS DATOS DE SUPABASE (solo la llave anon, NUNCA service_role) ====== */
+window.PORTAL_CONFIG = {
+  SUPABASE_URL: "https://jikyjcelsyoelalcxcyz.supabase.co",
+  SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imppa3lqY2Vsc3lvZWxhbGN4Y3l6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE5Mjg4ODcsImV4cCI6MjEwNzUwNDg4N30.LGb7AXz4q_EqfIdlsyoDmZOtNBT3-wMB9PRS-3KJ49c"
+};
+</script>
+<script>
+(function(){
+"use strict";
+var T={
+ en:{cfgMsg:"This portal is not connected yet. Open config.js and paste your Supabase URL and anon key.",
+  tagline:"Partner portal",fullName:"Full name",companyName:"Company name",email:"Email",password:"Password",
+  login:"Log in",signup:"Create account",toSignup:"New here? Create an account",toLogin:"Already have an account? Log in",
+  forgot:"Forgot password?",pendTitle:"Almost there",pendMsg:"Your account is waiting for approval from Value 141. We will activate it shortly.",
+  blkTitle:"Access suspended",blkMsg:"Your access has been suspended. Contact partners@value141.com.",logout:"Log out",
+  newPassTitle:"Set a new password",newPass:"New password",savePass:"Save password",
+  navHome:"Home",navApprovals:"Approvals",navCompanies:"Companies",navNews:"News",
+  welcome:"Welcome",yourCompany:"Your company",noCompany:"Not assigned yet",latest:"Latest from Value 141",noNews:"No news yet.",
+  pendingReq:"Pending requests",noPending:"No pending requests.",requested:"Requested company",approve:"Approve",block:"Block",unblock:"Unblock",
+  newCompanyFrom:"Create new company: ",existing:"Assign existing company",members:"Members",
+  addCompany:"Add company",companyNameLbl:"Company name",add:"Add",noCompanies:"No companies yet.",memberCount:"members",
+  newPost:"New post",tag:"Type",titleEn:"Title (English)",bodyEn:"Text (English)",titleEs:"Title (Spanish)",bodyEs:"Text (Spanish)",publish:"Publish",
+  del:"Delete",confirmDel:"Delete this post?",confirmBlock:"Block this user?",
+  tags:{update:"Update",news:"News",event:"Event",tip:"Tip"},
+  eFill:"Fill in email and password.",ePass:"Password must be at least 8 characters.",eName:"Enter your name and company.",
+  eGeneric:"Something went wrong. Try again.",checkMail:"Account created. If email confirmation is on, check your inbox, then log in.",
+  resetSent:"If that email exists, we sent a reset link.",eEmail:"Enter your email first.",passSaved:"Password updated.",
+  saved:"Saved.",assign:"Assign",
+  navLeads:"Leads",navCustomers:"Customers",navFollow:"Follow-ups",
+  tNew:"New leads",tDue:"Follow-ups due",tAppt:"Appointments",tWon:"Customers",
+  addLead:"Add lead",editLead:"Lead",name:"Name",phone:"Phone",source:"Source",status:"Status",projectType:"Project type",value:"Value ($)",
+  nextFollow:"Next follow-up",appt:"Appointment",notes:"Notes",addNote:"Add note",noteHint:"Write a note…",save:"Save",cancel:"Cancel",
+  search:"Search name, phone, email…",all:"All",noLeads:"No leads here yet.",noCust:"No customers yet. Mark a lead as Won.",noFollow:"Nothing scheduled.",
+  overdue:"Overdue",today:"Today",upcoming:"Upcoming",apptsTitle:"Appointments",call:"Call",text:"Text",mail:"Email",
+  confirmLead:"Delete this lead and its notes?",nameReq:"Name is required.",coReq:"Choose a company.",company:"Company",noNotes:"No notes yet.",
+  sources:{facebook:"Facebook",instagram:"Instagram",website:"Website",referral:"Referral",call:"Phone call",other:"Other"},
+  statuses:{new:"New",contacted:"Contacted",appointment:"Appointment",quoted:"Quoted",won:"Won",lost:"Lost"},
+pickCompany:"— choose —",unassigned:"Unassigned",error:"Error"},
+ es:{cfgMsg:"Este portal aún no está conectado. Abre config.js y pega tu URL y anon key de Supabase.",
+  tagline:"Portal de socios",fullName:"Nombre completo",companyName:"Nombre de la empresa",email:"Correo",password:"Contraseña",
+  login:"Entrar",signup:"Crear cuenta",toSignup:"¿Nuevo? Crea una cuenta",toLogin:"¿Ya tienes cuenta? Entra",
+  forgot:"¿Olvidaste tu contraseña?",pendTitle:"Ya casi",pendMsg:"Tu cuenta espera aprobación de Value 141. La activaremos pronto.",
+  blkTitle:"Acceso suspendido",blkMsg:"Tu acceso fue suspendido. Contacta a partners@value141.com.",logout:"Salir",
+  newPassTitle:"Nueva contraseña",newPass:"Nueva contraseña",savePass:"Guardar contraseña",
+  navHome:"Inicio",navApprovals:"Aprobaciones",navCompanies:"Empresas",navNews:"Noticias",
+  welcome:"Bienvenido",yourCompany:"Tu empresa",noCompany:"Aún sin asignar",latest:"Lo último de Value 141",noNews:"Aún no hay noticias.",
+  pendingReq:"Solicitudes pendientes",noPending:"No hay solicitudes pendientes.",requested:"Empresa solicitada",approve:"Aprobar",block:"Bloquear",unblock:"Desbloquear",
+  newCompanyFrom:"Crear empresa nueva: ",existing:"Asignar empresa existente",members:"Miembros",
+  addCompany:"Agregar empresa",companyNameLbl:"Nombre de la empresa",add:"Agregar",noCompanies:"Aún no hay empresas.",memberCount:"miembros",
+  newPost:"Nueva publicación",tag:"Tipo",titleEn:"Título (inglés)",bodyEn:"Texto (inglés)",titleEs:"Título (español)",bodyEs:"Texto (español)",publish:"Publicar",
+  del:"Borrar",confirmDel:"¿Borrar esta publicación?",confirmBlock:"¿Bloquear a este usuario?",
+  tags:{update:"Novedad",news:"Noticia",event:"Evento",tip:"Consejo"},
+  eFill:"Escribe correo y contraseña.",ePass:"La contraseña debe tener al menos 8 caracteres.",eName:"Escribe tu nombre y empresa.",
+  eGeneric:"Algo salió mal. Intenta de nuevo.",checkMail:"Cuenta creada. Si la confirmación por correo está activa, revisa tu bandeja y luego entra.",
+  resetSent:"Si el correo existe, enviamos un enlace para cambiar la contraseña.",eEmail:"Primero escribe tu correo.",passSaved:"Contraseña actualizada.",
+  saved:"Guardado.",assign:"Asignar",
+  navLeads:"Leads",navCustomers:"Clientes",navFollow:"Seguimientos",
+  tNew:"Leads nuevos",tDue:"Seguimientos pendientes",tAppt:"Citas",tWon:"Clientes",
+  addLead:"Agregar lead",editLead:"Lead",name:"Nombre",phone:"Teléfono",source:"Origen",status:"Estado",projectType:"Tipo de proyecto",value:"Valor ($)",
+  nextFollow:"Próximo seguimiento",appt:"Cita",notes:"Notas",addNote:"Agregar nota",noteHint:"Escribe una nota…",save:"Guardar",cancel:"Cancelar",
+  search:"Buscar nombre, teléfono, correo…",all:"Todos",noLeads:"Aún no hay leads aquí.",noCust:"Aún no hay clientes. Marca un lead como Ganado.",noFollow:"Nada programado.",
+  overdue:"Atrasados",today:"Hoy",upcoming:"Próximos",apptsTitle:"Citas",call:"Llamar",text:"Texto",mail:"Correo",
+  confirmLead:"¿Borrar este lead y sus notas?",nameReq:"El nombre es obligatorio.",coReq:"Elige una empresa.",company:"Empresa",noNotes:"Aún no hay notas.",
+  sources:{facebook:"Facebook",instagram:"Instagram",website:"Página web",referral:"Referido",call:"Llamada",other:"Otro"},
+  statuses:{new:"Nuevo",contacted:"Contactado",appointment:"Cita",quoted:"Cotizado",won:"Ganado",lost:"Perdido"},
+pickCompany:"— elegir —",unassigned:"Sin asignar",error:"Error"}
+};
+var lang="en";
+try{lang=localStorage.getItem("v141lang")||"en"}catch(e){}
+if(lang!=="es")lang="en";
+function t(k){return (T[lang][k]!==undefined?T[lang][k]:T.en[k])}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function $(id){return document.getElementById(id)}
+
+var sb=null,me=null,session=null,mode="login",curView="home",bootedFor=null,recovery=false;
+var cache={members:[],companies:[],news:[],leads:[]};
+var ui={filter:"all",q:""};
+
+function show(id){["sCfg","sAuth","sPending","sBlocked","sRecovery"].forEach(function(s){$(s).classList.add("hide")});
+ $("app").classList.add("hide"); if(id==="app")$("app").classList.remove("hide"); else $(id).classList.remove("hide")}
+
+function applyStatic(){
+ document.documentElement.lang=lang;
+ document.querySelectorAll("[data-i]").forEach(function(el){el.textContent=t(el.getAttribute("data-i"))});
+ $("langBtn").textContent=lang==="en"?"ES":"EN";
+ $("aBtn").textContent=mode==="login"?t("login"):t("signup");
+ $("aToggle").textContent=mode==="login"?t("toSignup"):t("toLogin");
+ $("signupOnly").classList.toggle("hide",mode==="login");
+ $("aPass").setAttribute("autocomplete",mode==="login"?"current-password":"new-password");
+ if(me){$("meBox").textContent=(me.full_name||me.email||"")}
+}
+function setMsg(el,text,ok){el.textContent=text;el.className="msg "+(ok?"ok":"err");}
+function clearMsg(el){el.className="msg hide";el.textContent=""}
+function errText(e){return (e&&e.message)?e.message:t("eGeneric")}
+
+/* ---------- AUTH ---------- */
+$("aToggle").addEventListener("click",function(){mode=mode==="login"?"signup":"login";clearMsg($("aMsg"));applyStatic()});
+$("langBtn").addEventListener("click",function(){lang=lang==="en"?"es":"en";try{localStorage.setItem("v141lang",lang)}catch(e){}applyStatic();if(!$("app").classList.contains("hide"))render()});
+
+$("fAuth").addEventListener("submit",function(ev){
+ ev.preventDefault();var m=$("aMsg");clearMsg(m);
+ var email=$("aEmail").value.trim(),pass=$("aPass").value;
+ if(!email||!pass){setMsg(m,t("eFill"));return}
+ var btn=$("aBtn");
+ if(mode==="signup"){
+  var name=$("aName").value.trim(),co=$("aCompany").value.trim();
+  if(!name||!co){setMsg(m,t("eName"));return}
+  if(pass.length<8){setMsg(m,t("ePass"));return}
+  btn.disabled=true;
+  sb.auth.signUp({email:email,password:pass,options:{data:{full_name:name,company_name:co}}}).then(function(r){
+   btn.disabled=false;
+   if(r.error){setMsg(m,errText(r.error));return}
+   if(!r.data.session)setMsg(m,t("checkMail"),true);
+  }).catch(function(e){btn.disabled=false;setMsg(m,errText(e))});
+ }else{
+  btn.disabled=true;
+  sb.auth.signInWithPassword({email:email,password:pass}).then(function(r){
+   btn.disabled=false;if(r.error)setMsg(m,errText(r.error));
+  }).catch(function(e){btn.disabled=false;setMsg(m,errText(e))});
+ }
+});
+$("aForgot").addEventListener("click",function(){
+ var m=$("aMsg");clearMsg(m);var email=$("aEmail").value.trim();
+ if(!email){setMsg(m,t("eEmail"));return}
+ sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname}).then(function(r){
+  if(r.error)setMsg(m,errText(r.error));else setMsg(m,t("resetSent"),true);
+ }).catch(function(e){setMsg(m,errText(e))});
+});
+$("fRec").addEventListener("submit",function(ev){
+ ev.preventDefault();var m=$("rMsg");clearMsg(m);var p=$("rPass").value;
+ if(p.length<8){setMsg(m,t("ePass"));return}
+ sb.auth.updateUser({password:p}).then(function(r){
+  if(r.error){setMsg(m,errText(r.error));return}
+  setMsg(m,t("passSaved"),true);recovery=false;
+  setTimeout(function(){bootedFor=null;route(session)},800);
+ }).catch(function(e){setMsg(m,errText(e))});
+});
+document.addEventListener("click",function(ev){
+ var a=ev.target.closest("[data-act='logout']");
+ if(a){sb.auth.signOut()}
+ var ld=ev.target.closest("[data-lead]");
+ if(ld&&!ev.target.closest("a[href]")){openLead(ld.getAttribute("data-lead"));return}
+ var v=ev.target.closest("[data-view]");
+ if(v){curView=v.getAttribute("data-view");render()}
+});
+
+/* ---------- ROUTING ---------- */
+function route(s){
+ session=s;
+ if(recovery){show("sRecovery");applyStatic();return}
+ if(!s){me=null;bootedFor=null;mode="login";show("sAuth");applyStatic();return}
+ if(bootedFor===s.user.id)return;
+ bootedFor=s.user.id;
+ sb.from("profiles").select("*").eq("id",s.user.id).single().then(function(r){
+  if(r.error||!r.data){bootedFor=null;show("sAuth");setMsg($("aMsg"),t("eGeneric"));return}
+  me=r.data;applyStatic();
+  if(me.status==="blocked")show("sBlocked");
+  else if(me.status!=="approved")show("sPending");
+  else{
+   show("app");
+   document.querySelectorAll(".adm").forEach(function(el){el.classList.toggle("hide",me.role!=="admin")});
+   curView="home";loadAll().then(render);
+  }
+  applyStatic();
+ }).catch(function(){bootedFor=null;show("sAuth")});
+}
+function loadAll(){
+ var ps=[sb.from("news").select("*").order("created_at",{ascending:false})];
+ if(me.role==="admin"){
+  ps.push(sb.from("profiles").select("*").order("created_at",{ascending:false}));
+  ps.push(sb.from("companies").select("*").order("name"));
+ }else ps.push(sb.from("companies").select("*"));
+ ps.push(sb.from("leads").select("*").order("created_at",{ascending:false}));
+ return Promise.all(ps).then(function(rs){
+  cache.news=(rs[0].data)||[];cache.leads=(rs[rs.length-1].data)||[];
+  if(me.role==="admin"){cache.members=(rs[1].data)||[];cache.companies=(rs[2].data)||[]}
+  else{cache.members=[];cache.companies=(rs[1].data)||[]}
+ }).catch(function(){});
+}
+function reload(){return loadAll().then(render)}
+
+/* ---------- VIEWS ---------- */
+function companyName(id){var c=cache.companies.filter(function(x){return x.id===id})[0];return c?c.name:null}
+function tagLabel(g){return T[lang].tags[g]||g}
+function render(){
+ if(!me)return;
+ document.querySelectorAll(".side a[data-view]").forEach(function(a){a.classList.toggle("on",a.getAttribute("data-view")===curView)});
+ var v=$("view");
+ if(me.role!=="admin"&&["approvals","companies","news"].indexOf(curView)>=0)curView="home";
+ if(curView==="leads"||curView==="customers"){v.innerHTML=vLeads(curView);bindLeads(curView);return}
+ if(curView==="followups"){v.innerHTML=vFollow();bindView();return}
+ if(curView==="approvals")v.innerHTML=vApprovals();
+ else if(curView==="companies")v.innerHTML=vCompanies();
+ else if(curView==="news")v.innerHTML=vNews();
+ else v.innerHTML=vHome();
+ bindView();
+}
+function vHome(){
+ var cn=companyName(me.company_id);
+ var h='<div class="top"><h2>'+esc(t("welcome"))+(me.full_name?', '+esc(me.full_name):'')+'</h2></div>';
+ h+='<div class="card"><div class="mut">'+esc(t("yourCompany"))+'</div><h3>'+esc(cn||t("noCompany"))+'</h3></div>';
+ h+=tilesHtml();
+ h+='<h3 style="margin:18px 0 10px">'+esc(t("latest"))+'</h3>';
+ if(!cache.news.length)h+='<div class="card mut">'+esc(t("noNews"))+'</div>';
+ cache.news.forEach(function(n){
+  var ti=(lang==="es"&&n.title_es)?n.title_es:n.title,bo=(lang==="es"&&n.body_es)?n.body_es:n.body;
+  h+='<div class="card"><span class="tag">'+esc(tagLabel(n.tag))+'</span><h3>'+esc(ti)+'</h3><div style="white-space:pre-wrap">'+esc(bo)+'</div><div class="mut" style="margin-top:8px">'+esc(new Date(n.created_at).toLocaleDateString(lang==="es"?"es-MX":"en-US"))+'</div></div>';
+ });
+ return h;
+}
+function companyOptions(sel){
+ var o='<option value="">'+esc(t("pickCompany"))+'</option>';
+ cache.companies.forEach(function(c){o+='<option value="'+esc(c.id)+'"'+(c.id===sel?' selected':'')+'>'+esc(c.name)+'</option>'});
+ return o;
+}
+function vApprovals(){
+ var pend=cache.members.filter(function(m){return m.status==="pending"});
+ var rest=cache.members.filter(function(m){return m.status!=="pending"});
+ var h='<div class="top"><h2>'+esc(t("navApprovals"))+'</h2></div><h3 style="margin-bottom:10px">'+esc(t("pendingReq"))+' ('+pend.length+')</h3>';
+ if(!pend.length)h+='<div class="card mut">'+esc(t("noPending"))+'</div>';
+ pend.forEach(function(m){
+  var req=m.company_name_requested||"";
+  h+='<div class="card f" data-m="'+esc(m.id)+'"><strong>'+esc(m.full_name||m.email)+'</strong><div class="mut">'+esc(m.email)+'</div>'+
+   '<div class="mut" style="margin:6px 0 10px">'+esc(t("requested"))+': <strong>'+esc(req||"—")+'</strong></div>'+
+   '<label>'+esc(t("existing"))+'</label><select class="selCo">'+companyOptions("")+'</select>'+
+   '<div class="rowx"><button class="btn sm act-approve" data-new="'+esc(req)+'">'+esc(t("approve"))+'</button>'+
+   '<button class="btn sm red act-block">'+esc(t("block"))+'</button></div>'+
+   (req?'<div class="mut" style="margin-top:6px">'+esc(t("newCompanyFrom"))+esc(req)+'</div>':'')+'</div>';
+ });
+ h+='<h3 style="margin:22px 0 10px">'+esc(t("members"))+' ('+rest.length+')</h3>';
+ rest.forEach(function(m){
+  var isMe=m.id===me.id;
+  h+='<div class="card f" data-m="'+esc(m.id)+'"><div class="rowx" style="justify-content:space-between"><div><strong>'+esc(m.full_name||m.email)+'</strong> <span class="pill '+esc(m.status)+'">'+esc(m.status)+'</span>'+(m.role==="admin"?' <span class="pill approved">admin</span>':'')+'<div class="mut">'+esc(m.email)+'</div></div></div>';
+  if(!isMe){
+   h+='<div class="rowx" style="margin-top:8px"><select class="selCo" style="width:auto;margin:0">'+companyOptions(m.company_id)+'</select>'+
+    '<button class="btn sm ghost act-assign" style="color:#6b5400;border-color:#C9A227">'+esc(t("assign"))+'</button>'+
+    (m.status==="blocked"?'<button class="btn sm act-unblock">'+esc(t("unblock"))+'</button>':'<button class="btn sm red act-block">'+esc(t("block"))+'</button>')+'</div>';
+  }
+  h+='</div>';
+ });
+ return h;
+}
+function vCompanies(){
+ var h='<div class="top"><h2>'+esc(t("navCompanies"))+'</h2></div>';
+ h+='<form class="card f rowx" id="fCo" novalidate><div style="flex:1;min-width:200px"><label>'+esc(t("companyNameLbl"))+'</label><input id="coName" maxlength="160"></div><button class="btn" type="submit" style="margin-top:6px">'+esc(t("add"))+'</button></form>';
+ if(!cache.companies.length)h+='<div class="card mut">'+esc(t("noCompanies"))+'</div>';
+ cache.companies.forEach(function(c){
+  var n=cache.members.filter(function(m){return m.company_id===c.id}).length;
+  h+='<div class="card"><h3>'+esc(c.name)+'</h3><div class="mut">'+n+' '+esc(t("memberCount"))+'</div></div>';
+ });
+ return h;
+}
+function vNews(){
+ var h='<div class="top"><h2>'+esc(t("navNews"))+'</h2></div>';
+ h+='<form class="card f" id="fNews" novalidate><h3>'+esc(t("newPost"))+'</h3>'+
+  '<label>'+esc(t("tag"))+'</label><select id="nTag">'+["update","news","event","tip"].map(function(g){return '<option value="'+g+'">'+esc(tagLabel(g))+'</option>'}).join("")+'</select>'+
+  '<label>'+esc(t("titleEn"))+'</label><input id="nTitle" maxlength="200">'+
+  '<label>'+esc(t("bodyEn"))+'</label><textarea id="nBody" rows="3"></textarea>'+
+  '<label>'+esc(t("titleEs"))+'</label><input id="nTitleEs" maxlength="200">'+
+  '<label>'+esc(t("bodyEs"))+'</label><textarea id="nBodyEs" rows="3"></textarea>'+
+  '<button class="btn" type="submit">'+esc(t("publish"))+'</button></form>';
+ cache.news.forEach(function(n){
+  h+='<div class="card" data-n="'+esc(n.id)+'"><span class="tag">'+esc(tagLabel(n.tag))+'</span><h3>'+esc(n.title)+'</h3><div class="mut" style="white-space:pre-wrap">'+esc(n.body)+'</div>'+
+   '<div style="margin-top:10px"><button class="btn sm red act-del">'+esc(t("del"))+'</button></div></div>';
+ });
+ return h;
+}
+
+/* ---------- LEADS ---------- */
+function todayStr(){var d=new Date();return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2)}
+function fmtD(s){if(!s)return"";var p=s.split("-");return new Date(+p[0],+p[1]-1,+p[2]).toLocaleDateString(lang==="es"?"es-MX":"en-US",{month:"short",day:"numeric"})}
+function fmtDT(iso){return new Date(iso).toLocaleString(lang==="es"?"es-MX":"en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"})}
+function toLocalInput(iso){if(!iso)return"";var d=new Date(iso);function p(n){return("0"+n).slice(-2)}return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())+"T"+p(d.getHours())+":"+p(d.getMinutes())}
+function stLabel(s){return T[lang].statuses[s]||s}
+function srcLabel(s){return T[lang].sources[s]||s}
+function isOpen(l){return l.status!=="won"&&l.status!=="lost"}
+function dueLeads(){var td=todayStr();return cache.leads.filter(function(l){return isOpen(l)&&l.next_followup&&l.next_followup<=td})}
+function upApps(){var now=Date.now();return cache.leads.filter(function(l){return isOpen(l)&&l.appt_at&&new Date(l.appt_at).getTime()>=now-3600000}).sort(function(a,b){return new Date(a.appt_at)-new Date(b.appt_at)})}
+function tilesHtml(){
+ var nw=cache.leads.filter(function(l){return l.status==="new"}).length,du=dueLeads().length,ap=upApps().length,wn=cache.leads.filter(function(l){return l.status==="won"}).length;
+ function tl(v,l,view,w){return '<div class="tile'+(w?' warn':'')+'" data-view="'+view+'"><b>'+v+'</b><span>'+esc(t(l))+'</span></div>'}
+ return '<div class="tiles">'+tl(nw,"tNew","leads")+tl(du,"tDue","followups",du>0)+tl(ap,"tAppt","followups")+tl(wn,"tWon","customers")+'</div>';
+}
+function phoneDigits(p){return String(p||"").replace(/[^\d+]/g,"")}
+function leadCard(l,showCo){
+ var td=todayStr(),late=l.next_followup&&l.next_followup<td&&isOpen(l);
+ var acts="";
+ if(l.phone)acts+='<a href="tel:'+esc(phoneDigits(l.phone))+'">'+esc(t("call"))+'</a><a href="sms:'+esc(phoneDigits(l.phone))+'">'+esc(t("text"))+'</a>';
+ if(l.email)acts+='<a href="mailto:'+esc(encodeURIComponent(l.email))+'">'+esc(t("mail"))+'</a>';
+ var meta=[srcLabel(l.source)];if(l.project_type)meta.push(l.project_type);if(l.value!=null&&l.value!=="")meta.push("$"+Number(l.value).toLocaleString());
+ if(showCo){var c=companyName(l.company_id);if(c)meta.push(c)}
+ return '<div class="card lead" data-lead="'+esc(l.id)+'"><div><div class="nm">'+esc(l.name)+' <span class="pill '+esc(l.status)+'">'+esc(stLabel(l.status))+'</span></div>'+
+  '<div class="mut">'+esc(meta.join(" · "))+'</div>'+
+  (l.next_followup?'<div class="mut'+(late?' late':'')+'">↻ '+esc(fmtD(l.next_followup))+'</div>':'')+
+  (l.appt_at?'<div class="mut">📅 '+esc(fmtDT(l.appt_at))+'</div>':'')+'</div><div class="acts">'+acts+'</div></div>';
+}
+function listFor(kind){
+ var q=ui.q.toLowerCase(),f=ui.filter;
+ return cache.leads.filter(function(l){
+  if(kind==="customers"){if(l.status!=="won")return false}
+  else{if(l.status==="won")return false;if(f!=="all"&&l.status!==f)return false}
+  if(q){var s=(l.name+" "+(l.phone||"")+" "+(l.email||"")).toLowerCase();if(s.indexOf(q)<0)return false}
+  return true});
+}
+function vLeads(kind){
+ var h='<div class="top"><h2>'+esc(t(kind==="leads"?"navLeads":"navCustomers"))+'</h2><button class="btn" id="addLeadBtn">+ '+esc(t("addLead"))+'</button></div>';
+ if(kind==="leads"){
+  h+='<div class="chips">'+["all","new","contacted","appointment","quoted","lost"].map(function(s){return '<span class="chip'+(ui.filter===s?' on':'')+'" data-f="'+s+'">'+esc(s==="all"?t("all"):stLabel(s))+'</span>'}).join("")+'</div>';
+ }
+ h+='<div class="f"><input id="leadQ" type="search" placeholder="'+esc(t("search"))+'" value="'+esc(ui.q)+'"></div><div id="leadList"></div>';
+ return h;
+}
+function paintList(kind){
+ var rows=listFor(kind),el=$("leadList");
+ el.innerHTML=rows.length?rows.map(function(l){return leadCard(l,me.role==="admin")}).join(""):'<div class="card mut">'+esc(t(kind==="leads"?"noLeads":"noCust"))+'</div>';
+}
+function bindLeads(kind){
+ paintList(kind);
+ $("addLeadBtn").addEventListener("click",function(){openLead(null,kind==="customers"?"won":"new")});
+ $("leadQ").addEventListener("input",function(){ui.q=this.value;paintList(kind)});
+ document.querySelectorAll("#view .chip").forEach(function(c){c.addEventListener("click",function(){ui.filter=c.getAttribute("data-f");render()})});
+}
+function vFollow(){
+ var td=todayStr(),open=cache.leads.filter(function(l){return isOpen(l)&&l.next_followup});
+ var od=open.filter(function(l){return l.next_followup<td}),tdy=open.filter(function(l){return l.next_followup===td}),up=open.filter(function(l){return l.next_followup>td}).sort(function(a,b){return a.next_followup<b.next_followup?-1:1});
+ od.sort(function(a,b){return a.next_followup<b.next_followup?-1:1});
+ function sec(title,arr,cls){return '<h3 style="margin:18px 0 10px"'+(cls?' class="'+cls+'"':'')+'>'+esc(title)+' ('+arr.length+')</h3>'+(arr.length?arr.map(function(l){return leadCard(l,me.role==="admin")}).join(""):'')}
+ var h='<div class="top"><h2>'+esc(t("navFollow"))+'</h2></div>';
+ var ap=upApps();
+ h+=sec(t("apptsTitle"),ap);
+ h+=sec(t("overdue"),od,"late")+sec(t("today"),tdy)+sec(t("upcoming"),up);
+ if(!ap.length&&!open.length)h+='<div class="card mut">'+esc(t("noFollow"))+'</div>';
+ return h;
+}
+function closeModal(){var m=$("ovl");if(m)m.remove()}
+function openLead(id,defStatus){
+ var l=id?cache.leads.filter(function(x){return x.id===id})[0]:null;
+ if(id&&!l)return;
+ var needCo=!l&&!me.company_id;
+ var sel=function(name,opts,cur){return '<select id="'+name+'">'+opts.map(function(o){return '<option value="'+o[0]+'"'+(o[0]===cur?' selected':'')+'>'+esc(o[1])+'</option>'}).join("")+'</select>'};
+ var st=["new","contacted","appointment","quoted","won","lost"].map(function(s){return [s,stLabel(s)]});
+ var so=["facebook","instagram","website","referral","call","other"].map(function(s){return [s,srcLabel(s)]});
+ var h='<div class="ov" id="ovl"><form class="modal f" id="fLead" novalidate><h3>'+esc(l?l.name:t("addLead"))+'</h3>'+
+  (needCo?'<label>'+esc(t("company"))+'</label><select id="mCo">'+companyOptions("")+'</select>':'')+
+  '<label>'+esc(t("name"))+'</label><input id="mName" maxlength="160" value="'+esc(l?l.name:"")+'">'+
+  '<div class="two"><div><label>'+esc(t("phone"))+'</label><input id="mPhone" type="tel" maxlength="40" value="'+esc(l?l.phone:"")+'"></div>'+
+  '<div><label>'+esc(t("email"))+'</label><input id="mEmail" type="email" maxlength="160" value="'+esc(l?l.email:"")+'"></div>'+
+  '<div><label>'+esc(t("source"))+'</label>'+sel("mSrc",so,l?l.source:"other")+'</div>'+
+  '<div><label>'+esc(t("status"))+'</label>'+sel("mSt",st,l?l.status:(defStatus||"new"))+'</div>'+
+  '<div><label>'+esc(t("projectType"))+'</label><input id="mProj" maxlength="120" value="'+esc(l?l.project_type:"")+'"></div>'+
+  '<div><label>'+esc(t("value"))+'</label><input id="mVal" type="number" min="0" step="0.01" value="'+esc(l&&l.value!=null?l.value:"")+'"></div>'+
+  '<div><label>'+esc(t("nextFollow"))+'</label><input id="mFu" type="date" value="'+esc(l?l.next_followup:"")+'"></div>'+
+  '<div><label>'+esc(t("appt"))+'</label><input id="mAp" type="datetime-local" value="'+esc(l?toLocalInput(l.appt_at):"")+'"></div></div>'+
+  '<div id="mErr" class="msg err hide"></div>'+
+  '<div class="rowx"><button class="btn" type="submit">'+esc(t("save"))+'</button><button class="btn ghost" type="button" id="mCancel" style="color:#6b5400;border-color:#C9A227">'+esc(t("cancel"))+'</button>'+
+  (l?'<button class="btn red" type="button" id="mDel" style="margin-left:auto">'+esc(t("del"))+'</button>':'')+'</div>'+
+  (l?'<h3 style="margin:18px 0 6px;font-size:16px">'+esc(t("notes"))+'</h3><textarea id="mNote" rows="2" placeholder="'+esc(t("noteHint"))+'"></textarea><button class="btn sm" type="button" id="mAddNote">'+esc(t("addNote"))+'</button><div id="mNotes"></div>':'')+
+  '</form></div>';
+ document.body.insertAdjacentHTML("beforeend",h);
+ $("ovl").addEventListener("mousedown",function(e){if(e.target.id==="ovl")closeModal()});
+ $("mCancel").addEventListener("click",closeModal);
+ $("fLead").addEventListener("submit",function(ev){
+  ev.preventDefault();var er=$("mErr");er.className="msg err hide";
+  var nm=$("mName").value.trim();if(!nm){er.textContent=t("nameReq");er.className="msg err";return}
+  var cid=l?l.company_id:(me.company_id||($("mCo")&&$("mCo").value));
+  if(!cid){er.textContent=t("coReq");er.className="msg err";return}
+  var v=$("mVal").value,ap=$("mAp").value;
+  var row={name:nm,phone:$("mPhone").value.trim()||null,email:$("mEmail").value.trim()||null,source:$("mSrc").value,status:$("mSt").value,
+   project_type:$("mProj").value.trim()||null,value:v===""?null:parseFloat(v),next_followup:$("mFu").value||null,appt_at:ap?new Date(ap).toISOString():null,updated_at:new Date().toISOString()};
+  var p=l?sb.from("leads").update(row).eq("id",l.id):sb.from("leads").insert(Object.assign({company_id:cid,created_by:me.id},row));
+  p.then(function(r){if(r.error){er.textContent=r.error.message;er.className="msg err";return}closeModal();reload()});
+ });
+ if(l){
+  $("mDel").addEventListener("click",function(){if(!confirm(t("confirmLead")))return;sb.from("leads").delete().eq("id",l.id).then(function(r){if(!fail(r)){closeModal();reload()}})});
+  var paintNotes=function(){sb.from("lead_notes").select("*").eq("lead_id",l.id).order("created_at",{ascending:false}).then(function(r){
+   var n=(r.data)||[],el=$("mNotes");if(!el)return;
+   el.innerHTML=n.length?n.map(function(x){return '<div class="note">'+esc(x.body)+'<div class="mut">'+esc(x.author_name||"")+' · '+esc(fmtDT(x.created_at))+'</div></div>'}).join(""):'<div class="mut" style="margin-top:8px">'+esc(t("noNotes"))+'</div>'})};
+  paintNotes();
+  $("mAddNote").addEventListener("click",function(){var b=$("mNote").value.trim();if(!b)return;
+   sb.from("lead_notes").insert({lead_id:l.id,company_id:l.company_id,body:b,author_name:me.full_name||me.email,created_by:me.id}).then(function(r){if(!fail(r)){$("mNote").value="";paintNotes()}})});
+ }
+}
+
+/* ---------- ACTIONS ---------- */
+function fail(r){if(r&&r.error){alert(t("error")+": "+r.error.message);return true}return false}
+function bindView(){
+ var v=$("view");
+ v.querySelectorAll(".act-approve").forEach(function(b){b.addEventListener("click",function(){
+  var card=b.closest("[data-m]"),id=card.getAttribute("data-m"),sel=card.querySelector(".selCo").value,nm=b.getAttribute("data-new");
+  b.disabled=true;
+  var p;
+  if(sel)p=Promise.resolve(sel);
+  else if(nm)p=sb.from("companies").insert({name:nm}).select().single().then(function(r){if(fail(r))throw 0;return r.data.id});
+  else p=Promise.resolve(null);
+  p.then(function(cid){return sb.from("profiles").update({status:"approved",company_id:cid}).eq("id",id)})
+   .then(function(r){if(!fail(r))return reload();b.disabled=false})
+   .catch(function(){b.disabled=false});
+ })});
+ v.querySelectorAll(".act-block").forEach(function(b){b.addEventListener("click",function(){
+  if(!confirm(t("confirmBlock")))return;
+  var id=b.closest("[data-m]").getAttribute("data-m");
+  sb.from("profiles").update({status:"blocked"}).eq("id",id).then(function(r){if(!fail(r))reload()});
+ })});
+ v.querySelectorAll(".act-unblock").forEach(function(b){b.addEventListener("click",function(){
+  var id=b.closest("[data-m]").getAttribute("data-m");
+  sb.from("profiles").update({status:"approved"}).eq("id",id).then(function(r){if(!fail(r))reload()});
+ })});
+ v.querySelectorAll(".act-assign").forEach(function(b){b.addEventListener("click",function(){
+  var card=b.closest("[data-m]"),id=card.getAttribute("data-m"),sel=card.querySelector(".selCo").value||null;
+  sb.from("profiles").update({company_id:sel}).eq("id",id).then(function(r){if(!fail(r))reload()});
+ })});
+ var fco=$("fCo");
+ if(fco)fco.addEventListener("submit",function(ev){ev.preventDefault();var n=$("coName").value.trim();if(!n)return;
+  sb.from("companies").insert({name:n}).then(function(r){if(!fail(r))reload()})});
+ var fn=$("fNews");
+ if(fn)fn.addEventListener("submit",function(ev){ev.preventDefault();
+  var title=$("nTitle").value.trim(),body=$("nBody").value.trim();
+  if(!title)return;
+  sb.from("news").insert({tag:$("nTag").value,title:title,body:body,title_es:$("nTitleEs").value.trim()||null,body_es:$("nBodyEs").value.trim()||null,created_by:me.id})
+   .then(function(r){if(!fail(r))reload()});
+ });
+ v.querySelectorAll(".act-del").forEach(function(b){b.addEventListener("click",function(){
+  if(!confirm(t("confirmDel")))return;
+  var id=b.closest("[data-n]").getAttribute("data-n");
+  sb.from("news").delete().eq("id",id).then(function(r){if(!fail(r))reload()});
+ })});
+}
+
+/* ---------- BOOT ---------- */
+applyStatic();
+var cfg=window.PORTAL_CONFIG||{};
+if(!window.supabase||!cfg.SUPABASE_URL||!cfg.SUPABASE_ANON_KEY||/YOUR-/.test(cfg.SUPABASE_URL)||/YOUR-/.test(cfg.SUPABASE_ANON_KEY)){
+ show("sCfg");applyStatic();$("copySql").addEventListener("click",function(){var b=$("sqlBox");b.select();try{navigator.clipboard.writeText(b.value)}catch(e){document.execCommand("copy")}this.textContent="OK ✓"});return;
+}
+sb=window.supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY);
+sb.auth.onAuthStateChange(function(event,s){
+ if(event==="PASSWORD_RECOVERY")recovery=true;
+ setTimeout(function(){route(s)},0);
+});
+})();
+</script>
+</body>
+</html>
